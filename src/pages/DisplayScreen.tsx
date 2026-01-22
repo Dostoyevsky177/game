@@ -46,7 +46,7 @@ interface DisplayScreenState {
  */
 interface AnimatedStats {
   totalVotes: number;
-  options: { optionId: string; percentage: number; count: number }[];
+  options: { optionId: string; label: string; percentage: number; count: number }[];
 }
 
 /**
@@ -210,6 +210,7 @@ export function DisplayScreen({ eventId }: DisplayScreenProps) {
 
         return {
           optionId: newOpt.optionId,
+          label: newOpt.label, // 保留 label 字段
           percentage: startPercentage + (newOpt.percentage - startPercentage) * easedProgress,
           count: Math.round(startCount + (newOpt.count - startCount) * easedProgress),
         };
