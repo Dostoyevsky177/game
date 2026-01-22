@@ -1,0 +1,25 @@
+/* 全局应用样式 */
+
+/* 错误页面样式 */
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #333;
+  background: #f5f5f5;
+}
+
+.error-page h1 {
+  font-size: 4rem;
+  margin: 0;
+  color: #999;
+}
+
+.error-page p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 0.5rem;
+}

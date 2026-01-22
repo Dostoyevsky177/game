@@ -1,0 +1,82 @@
+{
+    "events": {
+        "demo": {
+            "id": "demo",
+            "name": "演示活动",
+            "currentQuestionId": "q1",
+            "clearedQuestionId": null,
+            "createdAt": "2026-01-21T00:00:00.000Z"
+        }
+    },
+    "questions": {
+        "q1": {
+            "id": "q1",
+            "eventId": "demo",
+            "title": "你最喜欢的编程语言是什么？",
+            "options": [
+                {
+                    "id": "opt1",
+                    "label": "TypeScript",
+                    "color": "#3178C6"
+                },
+                {
+                    "id": "opt2",
+                    "label": "Python",
+                    "color": "#3776AB"
+                },
+                {
+                    "id": "opt3",
+                    "label": "JavaScript",
+                    "color": "#F7DF1E"
+                }
+            ],
+            "order": 1
+        },
+        "q2": {
+            "id": "q2",
+            "eventId": "demo",
+            "title": "你更喜欢前端还是后端开发？",
+            "options": [
+                {
+                    "id": "opt4",
+                    "label": "前端",
+                    "color": "#FF6B6B"
+                },
+                {
+                    "id": "opt5",
+                    "label": "后端",
+                    "color": "#4ECDC4"
+                },
+                {
+                    "id": "opt6",
+                    "label": "全栈",
+                    "color": "#FFE66D"
+                }
+            ],
+            "order": 2
+        },
+        "q3": {
+            "id": "q3",
+            "eventId": "demo",
+            "title": "你使用哪个代码编辑器？",
+            "options": [
+                {
+                    "id": "opt7",
+                    "label": "VS Code",
+                    "color": "#007ACC"
+                },
+                {
+                    "id": "opt8",
+                    "label": "WebStorm",
+                    "color": "#00CDD7"
+                },
+                {
+                    "id": "opt9",
+                    "label": "Vim/Neovim",
+                    "color": "#019733"
+                }
+            ],
+            "order": 3
+        }
+    }
+}

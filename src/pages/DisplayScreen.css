@@ -1,0 +1,430 @@
+/**
+ * DisplayScreen 大屏展示页样式
+ * 
+ * 设计定位：观看距离 5-15 米，所有文字超大号
+ * 版式结构：自上而下三区（问题区、核心数据区、辅助信息区）
+ * 
+ * Requirements: 3.5 - 显示各选项的投票数和百分比
+ */
+
+/* 基础容器 - 全屏展示 */
+.display-screen {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+  position: relative;
+  /* 防止选中文字 */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 加载状态 */
+.display-screen--loading,
+.display-screen--empty {
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-indicator {
+  text-align: center;
+}
+
+.loading-spinner-large {
+  width: 100px;
+  height: 100px;
+  border: 8px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #4ECDC4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 32px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-indicator p,
+.empty-message {
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* 连接状态指示器 */
+.connection-status {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  border-radius: 40px;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 600;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.connection-status--offline {
+  background: rgba(255, 107, 107, 0.95);
+  color: #fff;
+}
+
+.status-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+}
+
+/* ① 问题区（Question Header） */
+.question-header {
+  flex: 0 0 auto;
+  padding: clamp(24px, 4vh, 60px) clamp(24px, 5vw, 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 4vw, 60px);
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 二维码容器 */
+.qr-code-container {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.qr-hint {
+  font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+  color: #333;
+  font-weight: 600;
+}
+
+.question-text {
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.02em;
+  text-align: center;
+  flex: 1;
+}
+
+/* ② 核心数据区（Main Visualization） */
+.main-visualization {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 4vh, 60px) clamp(24px, 5vw, 80px);
+  min-height: 0; /* 允许 flex 收缩 */
+}
+
+.color-blocks {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-height: 500px;
+  gap: clamp(12px, 2vw, 24px);
+  border-radius: 24px;
+}
+
+/* 比例色块 */
+.color-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(16px, 3vw, 40px);
+  border-radius: 20px;
+  /* 快速过渡动画 - 300ms 与 JS 动画同步 */
+  transition: flex 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+  /* 色块阴影增加层次感 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* 色块内部信息层级 - 选项名最大，百分比次之，票数最小 */
+/* 字体大小由 JS 动态计算，保持相对比例 */
+.block-label {
+  font-weight: 900;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  margin-bottom: clamp(8px, 1.5vh, 20px);
+  text-align: center;
+  line-height: 1.15;
+  /* 允许换行，但尽量保持紧凑 */
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  padding: 0 8px;
+}
+
+.block-percentage {
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  opacity: 0.95;
+}
+
+.block-count {
+  opacity: 0.75;
+  margin-top: clamp(6px, 1vh, 12px);
+  font-weight: 500;
+}
+
+/* ③ 辅助信息区（Footer Info） */
+.footer-info {
+  flex: 0 0 auto;
+  padding: clamp(20px, 3vh, 40px) clamp(24px, 5vw, 80px);
+  background: rgba(0, 0, 0, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.total-votes {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.total-label {
+  font-size: clamp(1.2rem, 3vw, 3rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.total-number {
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 800;
+  color: #4ECDC4;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.02em;
+}
+
+/* 轮播指示器容器 */
+.carousel-indicators {
+  display: flex;
+  gap: clamp(12px, 2vw, 20px);
+  margin-left: clamp(40px, 8vw, 100px);
+}
+
+/* 轮播指示器按钮 */
+.carousel-indicator {
+  width: clamp(40px, 5vw, 60px);
+  height: clamp(40px, 5vw, 60px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicator:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.carousel-indicator--active {
+  background: #4ECDC4;
+  border-color: #4ECDC4;
+  box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+}
+
+.carousel-indicator--active:hover {
+  background: #3dbdb5;
+  border-color: #3dbdb5;
+}
+
+.indicator-number {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: #fff;
+}
+
+/* 响应式调整 - 中等屏幕 (1280px 以下) */
+@media (max-width: 1280px) {
+  .color-blocks {
+    max-height: 400px;
+  }
+}
+
+/* 响应式调整 - 平板/小屏幕 (768px 以下) */
+@media (max-width: 768px) {
+  .question-header {
+    padding: 20px 24px;
+  }
+  
+  .main-visualization {
+    padding: 16px 24px;
+  }
+  
+  .color-blocks {
+    flex-direction: column;
+    max-height: none;
+    gap: 12px;
+  }
+  
+  .color-block {
+    min-width: auto;
+    min-height: 100px;
+    flex: none !important;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 16px 24px;
+  }
+  
+  .block-label {
+    margin-bottom: 0;
+    margin-right: 16px;
+    flex: 1;
+    text-align: left;
+  }
+  
+  .block-percentage {
+    font-size: 2.5rem;
+  }
+  
+  .block-count {
+    margin-top: 0;
+    margin-left: 16px;
+    font-size: 1rem;
+  }
+  
+  .footer-info {
+    padding: 16px 24px;
+  }
+  
+  .connection-status {
+    top: 12px;
+    right: 12px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+/* 超宽屏适配 (21:9 等) */
+@media (min-aspect-ratio: 2/1) {
+  .color-blocks {
+    max-height: 60vh;
+  }
+  
+  .color-block {
+    min-width: 200px;
+  }
+}
+
+/* 竖屏大屏适配 (数字标牌等) */
+@media (orientation: portrait) and (min-height: 1000px) {
+  .display-screen {
+    justify-content: space-between;
+  }
+  
+  .question-header {
+    padding: 48px 40px;
+  }
+  
+  .color-blocks {
+    flex-direction: column;
+    max-height: none;
+    height: auto;
+  }
+  
+  .color-block {
+    min-height: 150px;
+    flex: 1 !important;
+  }
+  
+  .footer-info {
+    padding: 40px;
+  }
+}
+
+/* 4K 及以上超高清屏幕 */
+@media (min-width: 2560px) {
+  .question-text {
+    font-size: 6rem;
+  }
+  
+  /* 4K 屏幕字体大小由 JS 动态计算，这里只调整间距 */
+  .block-label {
+    margin-bottom: 24px;
+  }
+  
+  .block-count {
+    margin-top: 16px;
+  }
+  
+  .total-label {
+    font-size: 3.5rem;
+  }
+  
+  .total-number {
+    font-size: 7rem;
+  }
+  
+  .color-blocks {
+    max-height: 600px;
+    gap: 32px;
+  }
+  
+  .color-block {
+    border-radius: 32px;
+    min-width: 250px;
+  }
+}
+
+/* 打印样式 - 隐藏动态元素 */
+@media print {
+  .connection-status {
+    display: none;
+  }
+  
+  .display-screen {
+    background: white;
+    color: black;
+  }
+  
+  .color-block {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
