@@ -54,8 +54,8 @@ function App() {
         {/* 主持人控制台 */}
         <Route path="/control/:eventId" element={<ControlPanelWrapper />} />
         
-        {/* 默认重定向到投票页（演示用） */}
-        <Route path="/" element={<Navigate to="/vote/demo" replace />} />
+        {/* 默认重定向到大屏展示页（演示用） */}
+        <Route path="/" element={<Navigate to="/display/demo" replace />} />
         
         {/* 404 处理 */}
         <Route path="*" element={

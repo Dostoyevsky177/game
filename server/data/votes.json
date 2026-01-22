@@ -34,6 +34,27 @@
       "optionId": "opt7",
       "deviceId": "device_1769045036441_bp9gqynvy",
       "timestamp": "2026-01-22T01:24:53.065Z"
+    },
+    {
+      "id": "vote_1769046717798_6bsjcilky",
+      "questionId": "q2",
+      "optionId": "opt4",
+      "deviceId": "device_1769046713855_33yoi95gr",
+      "timestamp": "2026-01-22T01:51:57.798Z"
+    },
+    {
+      "id": "vote_1769046718400_946a30nm4",
+      "questionId": "q3",
+      "optionId": "opt8",
+      "deviceId": "device_1769046713855_33yoi95gr",
+      "timestamp": "2026-01-22T01:51:58.400Z"
+    },
+    {
+      "id": "vote_1769046719499_uh63i63ce",
+      "questionId": "q1",
+      "optionId": "opt2",
+      "deviceId": "device_1769046713855_33yoi95gr",
+      "timestamp": "2026-01-22T01:51:59.499Z"
     }
   ]
 }
